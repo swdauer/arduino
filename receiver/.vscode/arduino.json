@@ -1,0 +1,5 @@
+{
+    "sketch": "receiver.ino",
+    "board": "arduino:avr:uno",
+    "port": "/dev/ttyACM1"
+}

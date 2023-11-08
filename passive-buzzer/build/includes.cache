@@ -1,0 +1,17 @@
+[
+  {
+    "Sourcefile": null,
+    "Include": "",
+    "Includepath": "/home/swdauer/.arduino15/packages/arduino/hardware/avr/1.8.6/cores/arduino"
+  },
+  {
+    "Sourcefile": null,
+    "Include": "",
+    "Includepath": "/home/swdauer/.arduino15/packages/arduino/hardware/avr/1.8.6/variants/standard"
+  },
+  {
+    "Sourcefile": "/home/swdauer/workspace/arduino/passive-buzzer/build/sketch/passive-buzzer.ino.cpp",
+    "Include": "",
+    "Includepath": null
+  }
+]

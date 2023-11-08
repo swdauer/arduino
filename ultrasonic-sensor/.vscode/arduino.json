@@ -1,0 +1,5 @@
+{
+    "sketch": "ultrasonic-sensor.ino",
+    "board": "arduino:avr:uno",
+    "port": "/dev/ttyACM0"
+}
