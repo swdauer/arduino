@@ -6,10 +6,17 @@
 #define BUTTON_THREE_PIN 9
 #define BUTTON_FOUR_PIN 8
 #define BUTTON_FIVE_PIN 7
+
 #define JOYSTICK_X_PIN 5
 #define JOYSTICK_Y_PIN 4
 
+#define NUM_LEDS 300
+#define LED_STRIP_PIN 2
+
 unsigned long lastTime;
+bool on = true;
+CRGB leds[NUM_LEDS];
+
 
 // void logButtons() {
 //     Serial.print("POWER: ");
@@ -27,9 +34,19 @@ unsigned long lastTime;
 //     Serial.println();
 // }
 
-void logJoystick() {
+// void logJoystick() {
+//     Serial.print("X: ");
+//     Serial.println(analogRead(JOYSTICK_X_PIN));
+//     Serial.print("Y: ");
+//     Serial.println(analogRead(JOYSTICK_Y_PIN));
+//     Serial.println();
+// }
 
+void clearLightStrip() {
+    for (int i = 0; i < NUM_LEDS; i++) leds[i] = CRGB::Black;
+    FastLED.show();
 }
+
 
 void setup() {
     lastTime = millis();
@@ -40,6 +57,10 @@ void setup() {
     pinMode(BUTTON_THREE_PIN, INPUT_PULLUP);
     pinMode(BUTTON_FOUR_PIN, INPUT_PULLUP);
     pinMode(BUTTON_FIVE_PIN, INPUT_PULLUP);
+    FastLED.addLeds<NEOPIXEL, LED_STRIP_PIN>(leds, NUM_LEDS);
+    clearLightStrip();
+    leds[0] = CRGB::Purple;
+    FastLED.show();
 }
 
 void loop() {
