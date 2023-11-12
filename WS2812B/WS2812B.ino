@@ -1,34 +1,45 @@
-#include <IRremote.h>
 #include <FastLED.h>
 #define NUM_LEDS 300
 #define LED_PIN 6
-#define IR_REMOTE 11
+#define JOYSTICK_X_PIN 0
+#define JOYSTICK_Y_PIN 1
+#define ON_BUTTON_PIN 4
 CRGB leds[NUM_LEDS];
-bool on = true;
-// short currLed = 0;
+bool on = false;
+unsigned long lastTime = 0;
+unsigned short currLed = 0;
+
+/*
+TODO:
+Devise on/off button
+Perhaps add other buttons
+Create separate class for bed lightstrip
+Devise IO strategy with joystick and buttons
+Hang lightstrip
+*/
+
+void clearLightStrip() {
+    for (int i = 0; i < NUM_LEDS; i++) leds[i] = CRGB::Black;
+    FastLED.show();
+}
 
 void setup() {
-    Serial.begin(9600);
-    IrReceiver.begin(IR_REMOTE, ENABLE_LED_FEEDBACK);
+    lastTime = millis();
+    pinMode(ON_BUTTON_PIN, INPUT_PULLUP);
+    Serial.begin(115200);
     FastLED.addLeds<NEOPIXEL, LED_PIN>(leds, NUM_LEDS);
+    clearLightStrip();
+    leds[0] = CRGB::Purple;
+    FastLED.show();
 }
 
 void loop() {
-    if (IrReceiver.decode()) {
-        Serial.println(IrReceiver.decodedIRData.command, HEX);
-        if (IrReceiver.decodedIRData.command == 0x45) {
-            on != on;
-        }
-        IrReceiver.resume(); // Enable receiving of the next value
+    if (digitalRead(ON_BUTTON_PIN) == HIGH) on = true;
+    else on = false;
+    if (millis() - lastTime > 500) {
+        Serial.println(analogRead(JOYSTICK_X_PIN));
+        Serial.println(analogRead(JOYSTICK_Y_PIN));
+        Serial.println();
+        lastTime = millis();
     }
-    // if (digitalRead(STOP_BUTTON_PIN) == HIGH) {
-    //     leds[0] = CRGB::Black;
-    // } else {
-    //     leds[0] = CRGB::Purple;
-    // }
-    // FastLED.show();
-    // delay(30);
-    // if (!stop) {
-    // } else {
-    // }
 }

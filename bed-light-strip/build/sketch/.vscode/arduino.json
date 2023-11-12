@@ -1,0 +1,6 @@
+#line 1 "/home/swdauer/workspace/arduino/bed-light-strip/.vscode/arduino.json"
+{
+    "sketch": "bed-light-strip.ino",
+    "output": "build",
+    "board": "arduino:avr:uno"
+}
