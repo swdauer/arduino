@@ -1,5 +1,0 @@
-{
-    "sketch": "bed-light-strip.ino",
-    "output": "build",
-    "board": "arduino:avr:uno"
-}
