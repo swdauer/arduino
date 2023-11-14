@@ -16,6 +16,7 @@
 unsigned long lastTime;
 bool on = true;
 CRGB leds[NUM_LEDS];
+unsigned short currLed;
 
 
 // void logButtons() {
@@ -59,12 +60,14 @@ void setup() {
     pinMode(BUTTON_FIVE_PIN, INPUT_PULLUP);
     FastLED.addLeds<NEOPIXEL, LED_STRIP_PIN>(leds, NUM_LEDS);
     clearLightStrip();
-    leds[0] = CRGB::Purple;
-    FastLED.show();
+    currLed = 0;
 }
 
 void loop() {
-    if (millis() - lastTime > 500) {
+    if (millis() - lastTime > 50) {
+        leds[currLed] = CRGB::Purple;
+        currLed++;
+        FastLED.show();
         lastTime = millis();
     }
 }
