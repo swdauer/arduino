@@ -14,9 +14,23 @@
 #define LED_STRIP_PIN 2
 
 unsigned long lastTime;
+unsigned long lastPaletteChange;
 bool on = true;
 CRGB leds[NUM_LEDS];
-unsigned short currLed;
+uint8_t currBrightness = 64;
+
+#define NUM_PALETTES 8
+CRGBPalette16 palettes[] = {
+    CloudColors_p,
+    LavaColors_p,
+    OceanColors_p,
+    ForestColors_p,
+    RainbowColors_p,
+    RainbowStripeColors_p,
+    PartyColors_p,
+    HeatColors_p
+};
+uint8_t currPaletteIndex = 0;
 
 
 // void logButtons() {
@@ -51,6 +65,7 @@ void clearLightStrip() {
 
 void setup() {
     lastTime = millis();
+    lastPaletteChange = millis();
     // Serial.begin(9600);
     pinMode(POWER_BUTTON_PIN, INPUT_PULLUP);
     pinMode(BUTTON_ONE_PIN, INPUT_PULLUP);
@@ -59,15 +74,42 @@ void setup() {
     pinMode(BUTTON_FOUR_PIN, INPUT_PULLUP);
     pinMode(BUTTON_FIVE_PIN, INPUT_PULLUP);
     FastLED.addLeds<NEOPIXEL, LED_STRIP_PIN>(leds, NUM_LEDS);
-    clearLightStrip();
-    currLed = 0;
+    fill_palette(leds, NUM_LEDS, 0, 1, palettes[currPaletteIndex], currBrightness, LINEARBLEND);
+    FastLED.show();
 }
 
 void loop() {
     if (millis() - lastTime > 50) {
-        leds[currLed] = CRGB::Purple;
-        currLed++;
-        FastLED.show();
+        if (digitalRead(POWER_BUTTON_PIN) == LOW) {
+            on = !on;
+            if (!on) clearLightStrip();
+        }
+        if (on) {
+            if (analogRead(JOYSTICK_X_PIN) > 800) {
+                if (currBrightness > 255 - 16) currBrightness = 255;
+                else currBrightness += 16;
+                FastLED.setBrightness(currBrightness);
+                FastLED.show();
+            } else if (analogRead(JOYSTICK_X_PIN) < 200) {
+                if (currBrightness < 16) currBrightness = 0;
+                else currBrightness -= 16;
+                FastLED.setBrightness(currBrightness);
+                FastLED.show();
+            }
+            if (millis() - lastPaletteChange > 500 && analogRead(JOYSTICK_Y_PIN) > 800) {
+                currPaletteIndex++;
+                if (currPaletteIndex == NUM_PALETTES) currPaletteIndex = 0;
+                fill_palette(leds, NUM_LEDS, 0, 1, palettes[currPaletteIndex], currBrightness, LINEARBLEND);
+                FastLED.show();
+                lastPaletteChange = millis();
+            } else if (millis() - lastPaletteChange > 500 && analogRead(JOYSTICK_Y_PIN) < 200) {
+                if (currPaletteIndex == 0) currPaletteIndex = NUM_PALETTES;
+                currPaletteIndex--;
+                fill_palette(leds, NUM_LEDS, 0, 1, palettes[currPaletteIndex], currBrightness, LINEARBLEND);
+                FastLED.show();
+                lastPaletteChange = millis();
+            }
+        }
         lastTime = millis();
     }
 }
