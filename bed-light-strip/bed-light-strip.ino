@@ -83,33 +83,38 @@ void loop() {
         if (digitalRead(POWER_BUTTON_PIN) == LOW) {
             on = !on;
             if (!on) clearLightStrip();
-        }
-        if (on) {
-            if (analogRead(JOYSTICK_X_PIN) > 800) {
-                if (currBrightness > 255 - 16) currBrightness = 255;
-                else currBrightness += 16;
-                FastLED.setBrightness(currBrightness);
-                FastLED.show();
-            } else if (analogRead(JOYSTICK_X_PIN) < 200) {
-                if (currBrightness < 16) currBrightness = 0;
-                else currBrightness -= 16;
-                FastLED.setBrightness(currBrightness);
-                FastLED.show();
-            }
-            if (millis() - lastPaletteChange > 500 && analogRead(JOYSTICK_Y_PIN) > 800) {
-                currPaletteIndex++;
-                if (currPaletteIndex == NUM_PALETTES) currPaletteIndex = 0;
+            else {
                 fill_palette(leds, NUM_LEDS, 0, 1, palettes[currPaletteIndex], currBrightness, LINEARBLEND);
                 FastLED.show();
-                lastPaletteChange = millis();
-            } else if (millis() - lastPaletteChange > 500 && analogRead(JOYSTICK_Y_PIN) < 200) {
-                if (currPaletteIndex == 0) currPaletteIndex = NUM_PALETTES;
-                currPaletteIndex--;
-                fill_palette(leds, NUM_LEDS, 0, 1, palettes[currPaletteIndex], currBrightness, LINEARBLEND);
-                FastLED.show();
-                lastPaletteChange = millis();
             }
         }
-        lastTime = millis();
     }
+    if (on) {
+        if (analogRead(JOYSTICK_X_PIN) > 800) {
+            if (currBrightness > 255 - 16) currBrightness = 255;
+            else currBrightness += 16;
+            FastLED.setBrightness(currBrightness);
+            FastLED.show();
+        } else if (analogRead(JOYSTICK_X_PIN) < 200) {
+            if (currBrightness < 16) currBrightness = 0;
+            else currBrightness -= 16;
+            FastLED.setBrightness(currBrightness);
+            FastLED.show();
+        }
+        if (millis() - lastPaletteChange > 500 && analogRead(JOYSTICK_Y_PIN) > 800) {
+            currPaletteIndex++;
+            if (currPaletteIndex == NUM_PALETTES) currPaletteIndex = 0;
+            fill_palette(leds, NUM_LEDS, 0, 1, palettes[currPaletteIndex], currBrightness, LINEARBLEND);
+            FastLED.show();
+            lastPaletteChange = millis();
+        } else if (millis() - lastPaletteChange > 500 && analogRead(JOYSTICK_Y_PIN) < 200) {
+            if (currPaletteIndex == 0) currPaletteIndex = NUM_PALETTES;
+            currPaletteIndex--;
+            fill_palette(leds, NUM_LEDS, 0, 1, palettes[currPaletteIndex], currBrightness, LINEARBLEND);
+            FastLED.show();
+            lastPaletteChange = millis();
+        }
+    }
+    lastTime = millis();
+}
 }
