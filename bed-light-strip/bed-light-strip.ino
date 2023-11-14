@@ -78,6 +78,13 @@ void setup() {
     FastLED.show();
 }
 
+/*
+TODO: Fix on/off button
+Make brightness changing via joystick have a longer time between each change
+Add animations
+Add custom palettes
+*/
+
 void loop() {
     if (millis() - lastTime > 50) {
         if (digitalRead(POWER_BUTTON_PIN) == LOW) {
